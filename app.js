@@ -163,25 +163,16 @@ function bindDateNav() {
 
 /* ===== 底部导航 ===== */
 
-/** 绑定底部导航栏的四个页面切换按钮事件，并驱动滑块指示器滑动 */
+/** 绑定底部导航栏的四个页面切换按钮事件 */
 function bindNavigation() {
   const navItems = document.querySelectorAll('.nav-item');
-  const navBar = document.querySelector('.bottom-nav');
-
-  // 根据当前激活项把滑块定位到正确位置（无过渡，避免首屏滑动动画）
-  const initActive = document.querySelector('.nav-item.active');
-  const initIdx = initActive ? Array.from(navItems).indexOf(initActive) : 0;
-  navBar.style.setProperty('--nav-idx', initIdx);
-
-  navItems.forEach((item, idx) => {
+  navItems.forEach(item => {
     item.addEventListener('click', () => {
       const pageName = item.getAttribute('data-page');
       switchPage(pageName);
       // 更新导航栏激活状态
       navItems.forEach(n => n.classList.remove('active'));
       item.classList.add('active');
-      // 移动滑块到被点击项的位置
-      navBar.style.setProperty('--nav-idx', idx);
     });
   });
 }

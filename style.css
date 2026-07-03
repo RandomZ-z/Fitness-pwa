@@ -857,7 +857,7 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--border);
   display: flex;
-  height: var(--nav-height);
+  height: calc(var(--nav-height) + var(--safe-bottom));
   padding-bottom: var(--safe-bottom);
 }
 

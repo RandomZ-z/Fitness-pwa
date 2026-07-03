@@ -111,18 +111,48 @@ function renderDate() {
   headerEl.textContent = formatDateCN(App.currentDate) + ' ' + dayName;
 }
 
-/** 切换到前一天，并重新渲染首页打卡内容 */
-function prevDay() {
-  App.currentDate.setDate(App.currentDate.getDate() - 1);
-  renderDate();
-  renderHome();
+/** 切换日期并播放滑动动画
+ * @param {number} direction -1 为前一天，+1 为后一天
+ */
+function animateDayChange(direction) {
+  const body = document.getElementById('homeBody');
+  if (!body || body.classList.contains('animating')) return;
+
+  // 防止重复点击
+  body.classList.add('animating');
+
+  // 方向判定：-1 = 前一天（内容右出左进），+1 = 后一天（内容左出右进）
+  const outClass = direction < 0 ? 'slide-out-right' : 'slide-out-left';
+  const inClass  = direction < 0 ? 'slide-in-left'  : 'slide-in-right';
+
+  // 第一步：内容滑出
+  body.classList.add(outClass);
+
+  setTimeout(() => {
+    // 第二步：更新日期并重新渲染
+    App.currentDate.setDate(App.currentDate.getDate() + direction);
+    renderDate();
+    renderHome();
+
+    // 移除滑出类，添加滑入类
+    body.classList.remove(outClass);
+    body.classList.add(inClass);
+
+    setTimeout(() => {
+      // 第三步：动画结束，清理状态
+      body.classList.remove(inClass, 'animating');
+    }, 260);
+  }, 180);
 }
 
-/** 切换到后一天，并重新渲染首页打卡内容 */
+/** 切换到前一天 */
+function prevDay() {
+  animateDayChange(-1);
+}
+
+/** 切换到后一天 */
 function nextDay() {
-  App.currentDate.setDate(App.currentDate.getDate() + 1);
-  renderDate();
-  renderHome();
+  animateDayChange(+1);
 }
 
 /** 绑定日期导航按钮的前后切换事件 */

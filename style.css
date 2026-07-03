@@ -1266,6 +1266,51 @@ body {
   color: var(--text-muted);
 }
 
+/* ===== 首页内容主体 — 日期切换滑动动画 ===== */
+.home-body {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.home-body.animating {
+  pointer-events: none;
+}
+
+@keyframes slideOutLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(-40px); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOutRight {
+  from { opacity: 1; transform: translateX(0); }
+  to   { opacity: 0; transform: translateX(40px); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.home-body.slide-out-left {
+  animation: slideOutLeft 0.18s ease forwards;
+}
+
+.home-body.slide-in-right {
+  animation: slideInRight 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.home-body.slide-out-right {
+  animation: slideOutRight 0.18s ease forwards;
+}
+
+.home-body.slide-in-left {
+  animation: slideInLeft 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 /* ===== 选择器样式 ===== */
 .custom-select {
   width: 100%;

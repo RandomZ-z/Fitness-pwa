@@ -1005,18 +1005,22 @@ body::after {
   justify-content: center;
   gap: 3px;
   cursor: pointer;
-  transition: var(--transition);
+  /* 仅对颜色做过渡，避免点击时整体缩放抽动 */
+  transition: color 0.3s, background 0.3s, border-color 0.3s;
   -webkit-user-select: none;
   user-select: none;
   position: relative;
-  border: none;
+  border: 1px solid transparent;
   background: none;
   font-family: var(--font-body);
   border-radius: 22px;
+  /* 消除移动端点击时的蓝色高亮和聚焦边框 */
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
-.nav-item:active {
-  transform: scale(0.92);
+.nav-item:focus {
+  outline: none;
 }
 
 .nav-item .nav-icon {

@@ -448,21 +448,54 @@ function toggleWaterItem(index) {
 
 /** 渲染饮食页面所有子标签内容（本周食谱、饮食原则、饮水计划、烹饪建议） */
 function renderDietPage() {
+  renderWeekDaySelector();
   renderWeekMenu();
   renderPrinciples();
   renderWaterPlan();
   renderCookAdvice();
 }
 
-/** 渲染一周食谱，每天显示餐次卡片（可展开/折叠） */
-function renderWeekMenu() {
+/** 渲染周一~周日选择器，初始选中当天 */
+function renderWeekDaySelector() {
+  const selector = document.getElementById('weekDaySelector');
+  const todayKey = getDayKeyFromDate(App.currentDate);
+
+  selector.innerHTML = DAY_KEYS.map(day => `
+    <button class="week-day-btn ${day === todayKey ? 'active' : ''}" data-day="${day}">${day}</button>
+  `).join('');
+
+  // 绑定点击事件
+  selector.querySelectorAll('.week-day-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const day = btn.getAttribute('data-day');
+      selectDietDay(day);
+    });
+  });
+}
+
+/** 切换食谱查看的星期几，重新渲染当天食谱 */
+function selectDietDay(dayKey) {
+  // 更新选择器激活态
+  document.querySelectorAll('.week-day-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-day') === dayKey);
+  });
+  // 重新渲染当天食谱
+  renderWeekMenu(dayKey);
+}
+
+/** 渲染指定星期几的食谱，默认渲染当天 */
+function renderWeekMenu(dayKey) {
   const container = document.getElementById('weekDietMenu');
+  if (!dayKey) {
+    dayKey = getDayKeyFromDate(App.currentDate);
+  }
+
+  const dayDiet = WEEKLY_DIET[dayKey];
   let html = '';
 
-  DAY_KEYS.forEach(day => {
-    const dayDiet = WEEKLY_DIET[day];
-    if (!dayDiet) return;
-
+  if (!dayDiet) {
+    html = `<div style="text-align:center;color:var(--text-muted);padding:30px 0;">暂无该日食谱</div>`;
+  } else {
     const mealEntries = [
       { key: 'breakfast', data: dayDiet.breakfast },
       { key: 'lunch', data: dayDiet.lunch },
@@ -470,13 +503,14 @@ function renderWeekMenu() {
       { key: 'dinner', data: dayDiet.dinner }
     ].filter(m => m.data);
 
-    html += `<div class="meal-group">`;
-    html += `<div style="font-family:var(--font-display);font-size:0.9rem;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">${day}</div>`;
+    html += `<div class="meal-group meal-group-enter">`;
+    html += `<div style="font-family:var(--font-display);font-size:0.9rem;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">${dayKey}</div>`;
 
     mealEntries.forEach(meal => {
-      const id = `meal-${day}-${meal.key}`;
+      const id = `meal-${dayKey}-${meal.key}`;
+      // 卡片默认展开（添加 expanded 类）
       html += `
-        <div class="meal-card" id="${id}">
+        <div class="meal-card expanded" id="${id}">
           <div class="meal-header" onclick="toggleMealCard('${id}')">
             <div>
               <div class="meal-name">${meal.data.title}</div>
@@ -494,7 +528,7 @@ function renderWeekMenu() {
     });
 
     html += `</div>`;
-  });
+  }
 
   container.innerHTML = html;
 }
@@ -507,7 +541,7 @@ function toggleMealCard(cardId) {
   }
 }
 
-/** 渲染饮食原则网格和推荐/避免食材表格 */
+/** 渲染饮食原则网格和推荐食材表格 */
 function renderPrinciples() {
   // 渲染饮食原则网格
   const gridEl = document.getElementById('principleGrid');
@@ -517,19 +551,6 @@ function renderPrinciples() {
       <div class="p-text">${p.text}</div>
     </div>
   `).join('');
-
-  // 渲染避免食物
-  const avoidEl = document.getElementById('avoidFoods');
-  avoidEl.innerHTML = `<div class="food-table">` +
-    AVOID_FOODS.map(cat => `
-      <div class="food-row">
-        <div class="food-category">${cat.category}</div>
-        <div class="food-items">
-          ${cat.items.map(item => `<span class="food-tag avoid">${item}</span>`).join('')}
-        </div>
-      </div>
-    `).join('') +
-    `</div>`;
 
   // 渲染推荐食材
   const recEl = document.getElementById('recommendFoods');
@@ -667,6 +688,7 @@ function renderWorkoutPlan(weekKey) {
 
   // 渲染周标题
   let html = `
+    <div class="workout-plan-enter">
     <div style="margin-bottom:16px;">
       <div style="font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--text-primary);">${plan.label}</div>
       <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:4px;">${plan.subtitle}</div>
@@ -678,6 +700,7 @@ function renderWorkoutPlan(weekKey) {
     html += renderWorkoutDayCard(day);
   });
 
+  html += `</div>`;
   container.innerHTML = html;
 }
 

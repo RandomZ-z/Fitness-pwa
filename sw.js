@@ -2,7 +2,7 @@
  * Service Worker - PWA离线缓存策略
  */
 
-const CACHE_NAME = 'fitness-diary-v3';
+const CACHE_NAME = 'fitness-diary-v6';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

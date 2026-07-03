@@ -13,15 +13,6 @@ const DIET_PRINCIPLES = [
   { icon: '💧', text: '每日饮水2000-2500ml' }
 ];
 
-/** 避免食物列表 */
-const AVOID_FOODS = [
-  { category: '含糖饮料', items: ['奶茶', '可乐', '果汁饮料'] },
-  { category: '油炸食品', items: ['炸鸡', '薯条', '油条'] },
-  { category: '精制碳水', items: ['白面包', '蛋糕', '饼干'] },
-  { category: '加工肉类', items: ['香肠', '培根', '火腿'] },
-  { category: '高盐零食', items: ['薯片', '辣条', '咸菜'] }
-];
-
 /** 推荐食材 */
 const RECOMMEND_FOODS = [
   { category: '蛋白质', items: ['鸡胸肉', '鱼', '虾', '鸡蛋', '豆腐', '瘦牛肉'] },

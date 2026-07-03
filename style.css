@@ -1,37 +1,74 @@
 /**
  * 减脂日记 PWA - 全局样式
- * 设计风格：深色主题 + emerald green 主色调
+ * 设计风格：Liquid Glass（液态玻璃）
+ *  - 流动彩色 mesh 渐变背景
+ *  - 半透明玻璃卡片 + backdrop-filter 模糊
+ *  - 柔和光晕边框 + 内高光
+ *  - emerald green 发光强调色
  */
+
+/* ===== Google Fonts ===== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
 
 /* ===== CSS 变量 ===== */
 :root {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-card: #1e293b;
-  --bg-card-hover: #263348;
-  --bg-input: #0f172a;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --accent: #10b981;
-  --accent-light: #34d399;
-  --accent-dark: #059669;
-  --accent-glow: rgba(16, 185, 129, 0.15);
-  --orange: #f59e0b;
-  --blue: #3b82f6;
-  --red: #ef4444;
-  --purple: #8b5cf6;
-  --pink: #ec4899;
-  --border: #334155;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --radius-xs: 6px;
+  /* 玻璃透视底色（深色，让彩色光晕显眼） */
+  --bg-primary: #050816;
+  --bg-secondary: #0a0f1f;
+
+  /* 玻璃面：半透明白，靠 backdrop-filter 形成毛玻璃 */
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-bg-strong: rgba(255, 255, 255, 0.1);
+  --glass-bg-hover: rgba(255, 255, 255, 0.12);
+  --glass-bg-input: rgba(255, 255, 255, 0.04);
+
+  /* 兼容旧变量名（HTML 内联样式用到），统一映射到玻璃面 */
+  --bg-card: var(--glass-bg);
+  --bg-card-hover: var(--glass-bg-hover);
+  --bg-input: var(--glass-bg-input);
+
+  /* 文本 */
+  --text-primary: #f5f7ff;
+  --text-secondary: rgba(245, 247, 255, 0.72);
+  --text-muted: rgba(245, 247, 255, 0.45);
+
+  /* 强调色（emerald + 发光） */
+  --accent: #34d399;
+  --accent-light: #6ee7b7;
+  --accent-dark: #10b981;
+  --accent-glow: rgba(52, 211, 153, 0.45);
+  --accent-soft: rgba(52, 211, 153, 0.18);
+
+  --orange: #fbbf24;
+  --blue: #60a5fa;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --pink: #f472b6;
+
+  /* 玻璃边框（白色半透明，模拟边缘反光） */
+  --border: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --border-accent: rgba(52, 211, 153, 0.4);
+
+  /* 圆角 */
+  --radius: 22px;
+  --radius-sm: 14px;
+  --radius-xs: 8px;
+
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --nav-height: 64px;
+  --nav-height: 68px;
+
   --font-display: 'Outfit', sans-serif;
   --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  /* 玻璃阴影：外柔光 + 顶部内高光 */
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.45),
+            inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+            inset 0 -1px 0 0 rgba(0, 0, 0, 0.15);
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.35),
+               inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
+  --shadow-glow: 0 0 24px var(--accent-glow);
+
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -50,26 +87,68 @@ html {
 
 body {
   font-family: var(--font-body);
-  background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
-  padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+  padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 20px);
   -webkit-font-smoothing: antialiased;
+  position: relative;
+  background: var(--bg-primary);
 }
 
-/* Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+/* ===== 流动彩色 mesh 背景（透过玻璃看到的"光"） ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -20%;
+  z-index: -2;
+  background:
+    radial-gradient(40% 40% at 15% 20%, rgba(52, 211, 153, 0.32), transparent 70%),
+    radial-gradient(35% 35% at 85% 15%, rgba(96, 165, 250, 0.3), transparent 70%),
+    radial-gradient(45% 45% at 75% 80%, rgba(167, 139, 250, 0.26), transparent 70%),
+    radial-gradient(40% 40% at 20% 85%, rgba(244, 114, 182, 0.22), transparent 70%),
+    radial-gradient(50% 50% at 50% 50%, rgba(251, 191, 36, 0.1), transparent 70%);
+  filter: blur(40px) saturate(140%);
+  animation: meshFloat 24s ease-in-out infinite alternate;
+}
+
+/* 顶部到底部加深色叠层，提升文字对比 */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(5, 8, 22, 0.2) 0%,
+    rgba(5, 8, 22, 0.55) 60%,
+    rgba(5, 8, 22, 0.75) 100%);
+}
+
+@keyframes meshFloat {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(2%, -2%, 0) scale(1.05); }
+  100% { transform: translate3d(-2%, 2%, 0) scale(1.02); }
+}
+
+/* ===== 玻璃面通用类 ===== */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
 
 /* ===== 头部 ===== */
 .app-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(5, 8, 22, 0.35);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
   border-bottom: 1px solid var(--border);
   padding: 16px 20px;
   padding-top: max(16px, env(safe-area-inset-top, 0px));
@@ -81,6 +160,7 @@ body {
   font-weight: 800;
   color: var(--accent);
   letter-spacing: -0.02em;
+  text-shadow: 0 0 24px var(--accent-glow);
 }
 
 .app-header .subtitle {
@@ -111,10 +191,13 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border-radius: var(--radius);
   padding: 12px 16px;
   border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .date-nav .date-display {
@@ -129,11 +212,12 @@ body {
   color: var(--accent);
   font-weight: 500;
   margin-top: 2px;
+  text-shadow: 0 0 12px var(--accent-glow);
 }
 
 .date-nav button {
-  background: var(--accent-glow);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: var(--accent-soft);
+  border: 1px solid var(--border-accent);
   color: var(--accent);
   width: 36px;
   height: 36px;
@@ -144,12 +228,15 @@ body {
   font-size: 1.2rem;
   cursor: pointer;
   transition: var(--transition);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .date-nav button:active {
   transform: scale(0.92);
   background: var(--accent);
   color: #fff;
+  box-shadow: var(--shadow-glow);
 }
 
 /* ===== 统计概览卡片 ===== */
@@ -161,12 +248,15 @@ body {
 }
 
 .stat-card {
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px 12px;
   text-align: center;
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .stat-card .stat-number {
@@ -177,9 +267,9 @@ body {
   margin-bottom: 4px;
 }
 
-.stat-card .stat-number.green { color: var(--accent); }
-.stat-card .stat-number.orange { color: var(--orange); }
-.stat-card .stat-number.blue { color: var(--blue); }
+.stat-card .stat-number.green { color: var(--accent); text-shadow: 0 0 18px var(--accent-glow); }
+.stat-card .stat-number.orange { color: var(--orange); text-shadow: 0 0 18px rgba(251, 191, 36, 0.5); }
+.stat-card .stat-number.blue { color: var(--blue); text-shadow: 0 0 18px rgba(96, 165, 250, 0.5); }
 
 .stat-card .stat-label {
   font-size: 0.7rem;
@@ -204,42 +294,49 @@ body {
 .section-title .icon {
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
   flex-shrink: 0;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .section-title .icon.diet {
-  background: rgba(245, 158, 11, 0.15);
+  background: rgba(251, 191, 36, 0.18);
   color: var(--orange);
 }
 
 .section-title .icon.workout {
-  background: rgba(59, 130, 246, 0.15);
+  background: rgba(96, 165, 250, 0.18);
   color: var(--blue);
 }
 
 .section-title .icon.water {
-  background: rgba(56, 189, 248, 0.15);
+  background: rgba(56, 189, 248, 0.18);
   color: #38bdf8;
 }
 
 /* ===== 打卡卡片 ===== */
 .checkin-card {
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
   margin-bottom: 16px;
   transition: var(--transition);
+  box-shadow: var(--shadow);
 }
 
 .checkin-card.completed {
-  border-color: rgba(16, 185, 129, 0.3);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), var(--bg-card));
+  border-color: var(--border-accent);
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.12), var(--glass-bg));
+  box-shadow: var(--shadow), 0 0 24px rgba(52, 211, 153, 0.15);
 }
 
 .checkin-card .card-header {
@@ -267,16 +364,17 @@ body {
   font-weight: 600;
   padding: 4px 10px;
   border-radius: 20px;
-  background: var(--bg-input);
+  background: var(--glass-bg-input);
   color: var(--text-muted);
   border: 1px solid var(--border);
   transition: var(--transition);
 }
 
 .checkin-card .card-badge.done {
-  background: rgba(16, 185, 129, 0.15);
+  background: var(--accent-soft);
   color: var(--accent);
-  border-color: rgba(16, 185, 129, 0.3);
+  border-color: var(--border-accent);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.25);
 }
 
 /* ===== 打卡项列表 ===== */
@@ -289,7 +387,7 @@ body {
   align-items: flex-start;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   transition: var(--transition);
 }
 
@@ -298,14 +396,16 @@ body {
   padding-bottom: 0;
 }
 
-/* 自定义复选框 */
+/* 自定义复选框（玻璃质感） */
 .checkin-checkbox {
   flex-shrink: 0;
   width: 22px;
   height: 22px;
-  border-radius: 6px;
-  border: 2px solid var(--border);
-  background: var(--bg-input);
+  border-radius: 7px;
+  border: 1px solid var(--border-strong);
+  background: var(--glass-bg-input);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -323,6 +423,7 @@ body {
 .checkin-checkbox.checked {
   background: var(--accent);
   border-color: var(--accent);
+  box-shadow: 0 0 14px var(--accent-glow);
 }
 
 .checkin-checkbox.checked::after {
@@ -360,34 +461,39 @@ body {
 .checkin-btn {
   width: 100%;
   padding: 14px;
-  border: none;
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  border-radius: 16px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
   margin-top: 12px;
   font-family: var(--font-body);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .checkin-btn.primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   color: #fff;
+  border-color: var(--border-accent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .checkin-btn.primary:active {
   transform: scale(0.98);
   background: var(--accent-dark);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .checkin-btn.secondary {
-  background: var(--bg-input);
+  background: var(--glass-bg);
   color: var(--text-secondary);
   border: 1px solid var(--border);
 }
 
 .checkin-btn.secondary:active {
-  background: var(--bg-card-hover);
+  background: var(--glass-bg-hover);
 }
 
 /* ===== 饮食页面 - 食谱卡片 ===== */
@@ -399,11 +505,14 @@ body {
 }
 
 .meal-card {
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .meal-card .meal-header {
@@ -417,7 +526,7 @@ body {
 }
 
 .meal-card .meal-header:active {
-  background: var(--bg-card-hover);
+  background: var(--glass-bg-hover);
 }
 
 .meal-card .meal-name {
@@ -473,7 +582,8 @@ body {
   border-radius: 50%;
   background: var(--accent);
   flex-shrink: 0;
-  opacity: 0.6;
+  opacity: 0.7;
+  box-shadow: 0 0 8px var(--accent-glow);
 }
 
 /* ===== 运动页面 - 计划卡片 ===== */
@@ -495,7 +605,9 @@ body {
   flex-shrink: 0;
   padding: 8px 16px;
   border-radius: 20px;
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   color: var(--text-secondary);
   font-size: 0.8rem;
@@ -507,18 +619,21 @@ body {
 }
 
 .week-tab.active {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   color: #fff;
-  border-color: var(--accent);
+  border-color: var(--border-accent);
 }
 
 .workout-day-card {
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
   margin-bottom: 12px;
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .workout-day-card .day-header {
@@ -537,9 +652,10 @@ body {
 .workout-day-card .day-duration {
   font-size: 0.75rem;
   color: var(--text-muted);
-  background: var(--bg-input);
+  background: var(--glass-bg-input);
   padding: 4px 10px;
   border-radius: 12px;
+  border: 1px solid var(--border);
 }
 
 .phase-list {
@@ -553,7 +669,8 @@ body {
   align-items: flex-start;
   gap: 10px;
   padding: 8px 12px;
-  background: var(--bg-input);
+  background: var(--glass-bg-input);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xs);
 }
 
@@ -565,9 +682,9 @@ body {
   flex-shrink: 0;
 }
 
-.phase-dot.warmup { background: var(--orange); }
-.phase-dot.main { background: var(--accent); }
-.phase-dot.stretch { background: var(--blue); }
+.phase-dot.warmup { background: var(--orange); box-shadow: 0 0 8px rgba(251, 191, 36, 0.6); }
+.phase-dot.main { background: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+.phase-dot.stretch { background: var(--blue); box-shadow: 0 0 8px rgba(96, 165, 250, 0.6); }
 
 .phase-content {
   flex: 1;
@@ -617,12 +734,15 @@ body {
 }
 
 .exercise-item {
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
   margin-bottom: 10px;
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .exercise-item .exercise-name {
@@ -660,11 +780,13 @@ body {
 .exercise-item .exercise-note {
   font-size: 0.78rem;
   color: var(--orange);
-  background: rgba(245, 158, 11, 0.08);
+  background: rgba(251, 191, 36, 0.1);
   padding: 8px 12px;
   border-radius: var(--radius-xs);
   border-left: 3px solid var(--orange);
   line-height: 1.4;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* ===== 饮食原则/参考页面 ===== */
@@ -676,12 +798,15 @@ body {
 }
 
 .principle-item {
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
   text-align: center;
   transition: var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .principle-item .p-icon {
@@ -712,6 +837,7 @@ body {
   font-weight: 600;
   color: var(--accent);
   padding: 10px 0 4px;
+  text-shadow: 0 0 12px var(--accent-glow);
 }
 
 .food-table .food-items {
@@ -725,14 +851,16 @@ body {
   font-size: 0.75rem;
   padding: 4px 10px;
   border-radius: 12px;
-  background: var(--bg-input);
+  background: var(--glass-bg-input);
   color: var(--text-secondary);
   border: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .food-table .food-tag.avoid {
-  background: rgba(239, 68, 68, 0.08);
-  border-color: rgba(239, 68, 68, 0.2);
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.3);
   color: var(--red);
 }
 
@@ -746,7 +874,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 12px 16px;
@@ -777,9 +907,9 @@ body {
   flex-shrink: 0;
   width: 22px;
   height: 22px;
-  border-radius: 6px;
-  border: 2px solid var(--border);
-  background: var(--bg-input);
+  border-radius: 7px;
+  border: 1px solid var(--border-strong);
+  background: var(--glass-bg-input);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -794,6 +924,7 @@ body {
 .water-item .water-checkbox.checked {
   background: var(--blue);
   border-color: var(--blue);
+  box-shadow: 0 0 14px rgba(96, 165, 250, 0.55);
 }
 
 .water-item .water-checkbox.checked::after {
@@ -809,11 +940,13 @@ body {
 
 /* ===== 提示气泡 ===== */
 .tips-section {
-  background: rgba(59, 130, 246, 0.08);
-  border: 1px solid rgba(59, 130, 246, 0.15);
+  background: rgba(96, 165, 250, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.22);
   border-radius: var(--radius-sm);
   padding: 12px 16px;
   margin-top: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .tips-section .tips-title {
@@ -845,20 +978,51 @@ body {
   color: var(--blue);
 }
 
-/* ===== 底部导航栏 ===== */
+/* ===== 底部导航栏（浮岛玻璃 + 滑块指示器） ===== */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
   z-index: 200;
-  background: rgba(15, 23, 42, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
+  background: rgba(10, 15, 31, 0.55);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid var(--border-strong);
+  border-radius: 28px;
   display: flex;
-  height: calc(var(--nav-height) + var(--safe-bottom));
-  padding-bottom: var(--safe-bottom);
+  height: var(--nav-height);
+  padding: 6px;
+  /* --nav-idx 由 JS 设置，控制滑块位置（0~3） */
+  --nav-idx: 0;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+/* 滑块指示器：液态玻璃质感，随 --nav-idx 平滑滑动 */
+.nav-slider {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: calc((100% - 12px) / 4);
+  height: calc(100% - 12px);
+  /* 半透明玻璃面：淡绿色调，透出底部彩色光晕 */
+  background: linear-gradient(135deg,
+              rgba(255, 255, 255, 0.22),
+              rgba(52, 211, 153, 0.18));
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 22px;
+  /* 内高光模拟玻璃边缘反光 + 柔和外阴影 */
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.5),
+              inset 0 -1px 1px rgba(0, 0, 0, 0.08),
+              0 4px 16px rgba(0, 0, 0, 0.2);
+  /* 每次移动一个自身宽度；弹性曲线让滑动更生动 */
+  transform: translateX(calc(var(--nav-idx) * 100%));
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .nav-item {
@@ -873,9 +1037,11 @@ body {
   -webkit-user-select: none;
   user-select: none;
   position: relative;
+  z-index: 2; /* 确保在滑块之上，可点击 */
   border: none;
   background: none;
   font-family: var(--font-body);
+  border-radius: 22px;
 }
 
 .nav-item:active {
@@ -896,29 +1062,24 @@ body {
   transition: var(--transition);
 }
 
+/* 激活态：仅文字变白，背景由玻璃滑块提供 */
 .nav-item.active .nav-icon {
-  color: var(--accent);
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
 .nav-item.active .nav-label {
-  color: var(--accent);
-}
-
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  width: 32px;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
-  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
 /* ===== 进度条 ===== */
 .progress-bar {
   width: 100%;
   height: 6px;
-  background: var(--bg-input);
+  background: var(--glass-bg-input);
+  border: 1px solid var(--border);
   border-radius: 3px;
   overflow: hidden;
   margin: 8px 0;
@@ -927,8 +1088,9 @@ body {
 .progress-bar .progress-fill {
   height: 100%;
   border-radius: 3px;
-  background: var(--accent);
+  background: linear-gradient(90deg, var(--accent-dark), var(--accent-light));
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 /* ===== 空状态 ===== */
@@ -968,7 +1130,9 @@ body {
   flex-shrink: 0;
   padding: 6px 14px;
   border-radius: 16px;
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   color: var(--text-secondary);
   font-size: 0.78rem;
@@ -979,9 +1143,9 @@ body {
 }
 
 .sub-tab.active {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   color: #fff;
-  border-color: var(--accent);
+  border-color: var(--border-accent);
 }
 
 /* ===== 运动打卡确认 ===== */
@@ -1007,7 +1171,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .stretch-row:last-child {
@@ -1033,14 +1197,16 @@ body {
   flex-shrink: 0;
 }
 
-/* ===== Toast 提示 ===== */
+/* ===== Toast 提示（玻璃浮层） ===== */
 .toast {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(0.9);
-  background: var(--bg-card);
-  border: 1px solid var(--accent);
+  background: rgba(10, 15, 31, 0.7);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid var(--border-accent);
   color: var(--text-primary);
   padding: 16px 28px;
   border-radius: var(--radius);
@@ -1051,7 +1217,9 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
+              0 0 32px rgba(52, 211, 153, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .toast.show {
@@ -1070,15 +1238,15 @@ body {
   body {
     max-width: 430px;
     margin: 0 auto;
-    box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 80px rgba(0, 0, 0, 0.6);
   }
-  
+
   .bottom-nav {
-    max-width: 430px;
+    max-width: calc(430px - 24px);
     left: 50%;
     transform: translateX(-50%);
   }
-  
+
   .toast {
     max-width: 300px;
   }
@@ -1131,7 +1299,9 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 12px 16px;
@@ -1143,6 +1313,7 @@ body {
   font-weight: 800;
   color: var(--accent);
   min-width: 24px;
+  text-shadow: 0 0 10px var(--accent-glow);
 }
 
 .cook-method .method-name {
@@ -1194,12 +1365,15 @@ body {
 
 /* ===== 当天无计划提示 ===== */
 .rest-day-banner {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(167, 139, 250, 0.15));
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 24px 20px;
   text-align: center;
   margin-bottom: 20px;
+  box-shadow: var(--shadow);
 }
 
 .rest-day-banner .rest-icon {
@@ -1227,7 +1401,7 @@ body {
   align-items: center;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
 }
 
@@ -1238,18 +1412,21 @@ body {
 .meal-checkin-item .meal-type-icon {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
   flex-shrink: 0;
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.meal-type-icon.breakfast { background: rgba(245, 158, 11, 0.15); }
-.meal-type-icon.lunch { background: rgba(16, 185, 129, 0.15); }
-.meal-type-icon.snack { background: rgba(139, 92, 246, 0.15); }
-.meal-type-icon.dinner { background: rgba(59, 130, 246, 0.15); }
+.meal-type-icon.breakfast { background: rgba(251, 191, 36, 0.18); }
+.meal-type-icon.lunch { background: rgba(52, 211, 153, 0.18); }
+.meal-type-icon.snack { background: rgba(167, 139, 250, 0.18); }
+.meal-type-icon.dinner { background: rgba(96, 165, 250, 0.18); }
 
 .meal-checkin-item .meal-info {
   flex: 1;
@@ -1315,7 +1492,7 @@ body {
 .custom-select {
   width: 100%;
   padding: 12px 16px;
-  background: var(--bg-input);
+  background: var(--glass-bg-input);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
@@ -1324,21 +1501,27 @@ body {
   -webkit-appearance: none;
   appearance: none;
   cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .custom-select:focus {
   outline: none;
-  border-color: var(--accent);
+  border-color: var(--border-accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
 
 /* ===== 日历记录模块 ===== */
 .calendar-widget {
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   margin-bottom: 24px;
   overflow: hidden;
   transition: var(--transition);
+  box-shadow: var(--shadow);
 }
 
 /* 日历头部（折叠态） */
@@ -1353,7 +1536,7 @@ body {
 }
 
 .calendar-header:active {
-  background: var(--bg-card-hover);
+  background: var(--glass-bg-hover);
 }
 
 .calendar-header-left {
@@ -1365,12 +1548,15 @@ body {
 .calendar-header-left .cal-icon {
   width: 32px;
   height: 32px;
-  border-radius: 8px;
-  background: rgba(16, 185, 129, 0.15);
+  border-radius: 10px;
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .calendar-header-left .cal-title {
@@ -1396,7 +1582,7 @@ body {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: var(--bg-input);
+  background: var(--glass-bg-input);
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -1453,9 +1639,9 @@ body {
 }
 
 .calendar-preview .preview-date.today {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   color: #fff;
-  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 2px 16px var(--accent-glow);
 }
 
 /* 日历展开态 - 完整月历 */
@@ -1488,7 +1674,7 @@ body {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--bg-input);
+  background: var(--glass-bg-input);
   border: 1px solid var(--border);
   color: var(--text-secondary);
   display: flex;
@@ -1502,8 +1688,9 @@ body {
 .calendar-month-nav button:active {
   background: var(--accent);
   color: #fff;
-  border-color: var(--accent);
+  border-color: var(--border-accent);
   transform: scale(0.92);
+  box-shadow: var(--shadow-glow);
 }
 
 .calendar-grid {
@@ -1535,7 +1722,7 @@ body {
   width: 100%;
   aspect-ratio: 1;
   max-width: 42px;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1544,6 +1731,7 @@ body {
   color: var(--text-primary);
   transition: var(--transition);
   position: relative;
+  border: 1px solid transparent;
 }
 
 .calendar-grid .grid-day-cell.other-month {
@@ -1552,7 +1740,7 @@ body {
 }
 
 .calendar-grid .grid-day-cell.today {
-  color: var(--bg-primary);
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -1560,27 +1748,31 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 10px;
-  border: 2px solid var(--text-primary);
-  opacity: 0.5;
+  border-radius: 12px;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 14px var(--accent-glow);
 }
 
-/* 打卡程度色块（类 GitHub 贡献图） */
+/* 打卡程度色块（玻璃发光版） */
 .calendar-grid .grid-day-cell.level-0 {
   background: transparent;
 }
 
 .calendar-grid .grid-day-cell.level-1 {
-  background: rgba(16, 185, 129, 0.2);
+  background: rgba(52, 211, 153, 0.2);
+  border-color: var(--border);
 }
 
 .calendar-grid .grid-day-cell.level-2 {
-  background: rgba(16, 185, 129, 0.4);
+  background: rgba(52, 211, 153, 0.38);
+  border-color: var(--border-accent);
 }
 
 .calendar-grid .grid-day-cell.level-3 {
-  background: rgba(16, 185, 129, 0.65);
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
   color: #fff;
+  border-color: var(--border-accent);
+  box-shadow: 0 0 14px var(--accent-glow);
 }
 
 .calendar-grid .grid-day-cell.future {
@@ -1614,13 +1806,14 @@ body {
 .calendar-legend .legend-dot {
   width: 12px;
   height: 12px;
-  border-radius: 3px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
 }
 
-.calendar-legend .legend-dot.l0 { background: var(--bg-input); }
-.calendar-legend .legend-dot.l1 { background: rgba(16, 185, 129, 0.2); }
-.calendar-legend .legend-dot.l2 { background: rgba(16, 185, 129, 0.4); }
-.calendar-legend .legend-dot.l3 { background: rgba(16, 185, 129, 0.65); }
+.calendar-legend .legend-dot.l0 { background: var(--glass-bg-input); }
+.calendar-legend .legend-dot.l1 { background: rgba(52, 211, 153, 0.2); }
+.calendar-legend .legend-dot.l2 { background: rgba(52, 211, 153, 0.38); }
+.calendar-legend .legend-dot.l3 { background: linear-gradient(135deg, var(--accent), var(--accent-dark)); }
 
 /* 日历统计行 */
 .calendar-stats-row {
@@ -1643,6 +1836,7 @@ body {
   color: var(--accent);
   line-height: 1;
   margin-bottom: 4px;
+  text-shadow: 0 0 14px var(--accent-glow);
 }
 
 .calendar-stats-row .cal-stat-label {

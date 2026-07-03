@@ -4,8 +4,8 @@
   "description": "记录减脂期间的饮食和运动打卡",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#10b981",
+  "background_color": "#050816",
+  "theme_color": "#34d399",
   "orientation": "portrait",
   "icons": [
     {

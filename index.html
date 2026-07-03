@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="description" content="减脂日记 - 记录每日饮食和运动打卡">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icons/app-icon.jpg">
+  <title>减脂日记</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <!-- 顶部标题栏 -->
+  <header class="app-header">
+    <h1>减脂日记</h1>
+    <div class="subtitle" id="headerDate"></div>
+  </header>
+
+  <!-- ===== 首页 ===== -->
+  <main class="page active" id="page-home">
+    <!-- 日期导航 -->
+    <div class="date-nav" id="dateNav">
+      <button id="prevDay" aria-label="前一天">‹</button>
+      <div>
+        <div class="date-display" id="dateDisplay"></div>
+        <div class="day-label" id="dayLabel"></div>
+      </div>
+      <button id="nextDay" aria-label="后一天">›</button>
+    </div>
+
+    <!-- 今日统计 -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-number green" id="statDiet">0/4</div>
+        <div class="stat-label">饮食</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number blue" id="statWorkout">-</div>
+        <div class="stat-label">运动</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number orange" id="statWater">0/7</div>
+        <div class="stat-label">饮水</div>
+      </div>
+    </div>
+
+    <!-- 饮食打卡 -->
+    <div class="section-title">
+      <div class="icon diet">🍽</div>
+      今日饮食
+    </div>
+    <div class="checkin-card diet-checkin-card" id="dietCheckinCard">
+      <div class="card-header">
+        <div>
+          <div class="card-title" id="dietDayTitle">今日食谱</div>
+          <div class="card-subtitle" id="dietDayCal">约 1700 kcal</div>
+        </div>
+        <span class="card-badge" id="dietBadge">0/4</span>
+      </div>
+      <ul class="checkin-list" id="dietCheckinList"></ul>
+    </div>
+
+    <!-- 运动打卡 -->
+    <div class="section-title">
+      <div class="icon workout">💪</div>
+      今日运动
+    </div>
+    <div id="workoutCheckinArea">
+      <!-- 由 JS 动态渲染 -->
+    </div>
+
+    <!-- 饮水打卡 -->
+    <div class="section-title">
+      <div class="icon water">💧</div>
+      饮水记录
+    </div>
+    <div class="checkin-card" id="waterCheckinCard">
+      <ul class="checkin-list" id="waterCheckinList"></ul>
+      <div class="progress-bar">
+        <div class="progress-fill" id="waterProgress" style="width:0%"></div>
+      </div>
+      <div style="text-align:center;font-size:0.75rem;color:var(--text-muted)" id="waterSummary">已完成 0/7</div>
+    </div>
+  </main>
+
+  <!-- ===== 饮食页 ===== -->
+  <main class="page" id="page-diet">
+    <div class="sub-tabs" id="dietTabs">
+      <button class="sub-tab active" data-diet-tab="menu">本周食谱</button>
+      <button class="sub-tab" data-diet-tab="principles">饮食原则</button>
+      <button class="sub-tab" data-diet-tab="water">饮水计划</button>
+      <button class="sub-tab" data-diet-tab="cook">烹饪建议</button>
+    </div>
+
+    <!-- 食谱视图 -->
+    <div class="diet-sub-page active" id="dietTab-menu">
+      <div id="weekDietMenu"></div>
+    </div>
+
+    <!-- 饮食原则视图 -->
+    <div class="diet-sub-page" id="dietTab-principles">
+      <div class="reference-section">
+        <div class="reference-section-title">清洁饮食核心原则</div>
+        <div class="principle-grid" id="principleGrid"></div>
+      </div>
+      <div class="reference-section">
+        <div class="reference-section-title">需要避免的食物</div>
+        <div id="avoidFoods"></div>
+      </div>
+      <div class="reference-section">
+        <div class="reference-section-title">推荐食材清单</div>
+        <div id="recommendFoods"></div>
+      </div>
+    </div>
+
+    <!-- 饮水计划视图 -->
+    <div class="diet-sub-page" id="dietTab-water">
+      <div class="reference-section">
+        <div class="reference-section-title">每日饮水计划（约2000ml）</div>
+        <div class="water-list" id="waterPlanList"></div>
+      </div>
+    </div>
+
+    <!-- 烹饪建议视图 -->
+    <div class="diet-sub-page" id="dietTab-cook">
+      <div class="reference-section">
+        <div class="reference-section-title">推荐烹饪方式（按优先级排序）</div>
+        <div class="cook-method-list" id="cookMethods"></div>
+      </div>
+      <div class="reference-section">
+        <div class="reference-section-title">调味料选择</div>
+        <div id="seasoningInfo"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== 运动页 ===== -->
+  <main class="page" id="page-workout">
+    <div class="sub-tabs" id="workoutTabs">
+      <button class="sub-tab active" data-workout-tab="plan">运动计划</button>
+      <button class="sub-tab" data-workout-tab="library">动作库</button>
+    </div>
+
+    <!-- 运动计划视图 -->
+    <div class="workout-sub-page active" id="workoutTab-plan">
+      <div class="week-selector" id="weekSelector"></div>
+      <div id="workoutPlanContent"></div>
+    </div>
+
+    <!-- 动作库视图 -->
+    <div class="workout-sub-page" id="workoutTab-library">
+      <div class="sub-tabs" id="libraryTabs">
+        <button class="sub-tab active" data-lib-tab="exercises">力量训练</button>
+        <button class="sub-tab" data-lib-tab="warmup">热身动作</button>
+        <button class="sub-tab" data-lib-tab="stretch">拉伸动作</button>
+      </div>
+      <div class="lib-sub-page active" id="libTab-exercises">
+        <div id="exerciseLibrary"></div>
+      </div>
+      <div class="lib-sub-page" id="libTab-warmup">
+        <div id="warmupLibrary"></div>
+      </div>
+      <div class="lib-sub-page" id="libTab-stretch">
+        <div id="stretchLibrary"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== 参考页 ===== -->
+  <main class="page" id="page-reference">
+    <!-- 日历记录模块 -->
+    <div class="calendar-widget" id="calendarWidget">
+      <!-- 折叠态头部 -->
+      <div class="calendar-header" id="calendarHeader" onclick="toggleCalendar()">
+        <div class="calendar-header-left">
+          <div class="cal-icon">📅</div>
+          <div class="cal-title">日历</div>
+        </div>
+        <div class="calendar-header-right">
+          <span class="cal-streak" id="calStreak">连续打卡 0 天</span>
+          <div class="cal-expand-arrow">›</div>
+        </div>
+      </div>
+
+      <!-- 折叠态：当前周预览 -->
+      <div class="calendar-preview" id="calendarPreview">
+        <!-- 由 JS 动态渲染 7 天 -->
+      </div>
+
+      <!-- 展开态：完整月历 -->
+      <div class="calendar-body" id="calendarBody">
+        <div class="calendar-month-nav">
+          <button onclick="calendarPrevMonth(event)" aria-label="上一月">‹</button>
+          <div class="month-display" id="calMonthDisplay"></div>
+          <button onclick="calendarNextMonth(event)" aria-label="下一月">›</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid">
+          <!-- 由 JS 动态渲染 -->
+        </div>
+        <div class="calendar-legend">
+          <span class="legend-label">少</span>
+          <div class="legend-item"><div class="legend-dot l0"></div></div>
+          <div class="legend-item"><div class="legend-dot l1"></div></div>
+          <div class="legend-item"><div class="legend-dot l2"></div></div>
+          <div class="legend-item"><div class="legend-dot l3"></div></div>
+          <span class="legend-label">多</span>
+        </div>
+        <div class="calendar-stats-row">
+          <div class="cal-stat">
+            <div class="cal-stat-num" id="calTotalDays">0</div>
+            <div class="cal-stat-label">累计打卡天数</div>
+          </div>
+          <div class="cal-stat">
+            <div class="cal-stat-num" id="calStreakDays">0</div>
+            <div class="cal-stat-label">连续打卡天数</div>
+          </div>
+          <div class="cal-stat">
+            <div class="cal-stat-num" id="calMonthDays">0</div>
+            <div class="cal-stat-label">本月打卡天数</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reference-section">
+      <div class="reference-section-title">个人信息</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.85rem;">
+          <span style="color:var(--text-secondary)">身高</span>
+          <span style="color:var(--text-primary);font-weight:500">176cm</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.85rem;">
+          <span style="color:var(--text-secondary)">当前体重</span>
+          <span style="color:var(--orange);font-weight:600">100kg (200斤)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.85rem;">
+          <span style="color:var(--text-secondary)">BMI</span>
+          <span style="color:var(--text-primary);font-weight:500">≈ 32.3</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.85rem;">
+          <span style="color:var(--text-secondary)">每日建议热量</span>
+          <span style="color:var(--accent);font-weight:600">2000-2200 kcal</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.85rem;">
+          <span style="color:var(--text-secondary)">三大营养素</span>
+          <span style="color:var(--text-primary);font-weight:500">蛋白30% | 碳水40% | 脂肪30%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reference-section">
+      <div class="reference-section-title">运动安全提示</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+        <ul style="list-style:none;font-size:0.85rem;">
+          <li style="padding:6px 0;border-bottom:1px solid var(--border);color:var(--text-secondary);line-height:1.5;">
+            <span style="color:var(--red);font-weight:600;">关节刺痛</span> → 立即停止，选择更低冲击运动
+          </li>
+          <li style="padding:6px 0;border-bottom:1px solid var(--border);color:var(--text-secondary);line-height:1.5;">
+            <span style="color:var(--red);font-weight:600;">呼吸困难/头晕</span> → 立即停止，必要时就医
+          </li>
+          <li style="padding:6px 0;border-bottom:1px solid var(--border);color:var(--text-secondary);line-height:1.5;">
+            饭后 <span style="color:var(--orange);font-weight:600;">1.5-2 小时</span> 再运动
+          </li>
+          <li style="padding:6px 0;border-bottom:1px solid var(--border);color:var(--text-secondary);line-height:1.5;">
+            运动前后各补充 <span style="color:var(--blue);font-weight:600;">200-300ml</span> 水
+          </li>
+          <li style="padding:6px 0;color:var(--text-secondary);line-height:1.5;">
+            穿<span style="color:var(--accent);font-weight:600;">支撑性好的运动鞋</span>，不要穿板鞋/布鞋运动
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="reference-section">
+      <div class="reference-section-title">外出就餐指南</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+        <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);margin-bottom:10px;">餐厅选择优先级</div>
+        <ol style="list-style:none;font-size:0.82rem;color:var(--text-secondary);">
+          <li style="padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--accent);font-weight:700;margin-right:8px;">1</span>轻食沙拉店
+          </li>
+          <li style="padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--accent);font-weight:700;margin-right:8px;">2</span>日式料理（选刺身、烤物，避免天妇罗）
+          </li>
+          <li style="padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--accent);font-weight:700;margin-right:8px;">3</span>中式快餐（选蒸、煮类菜品）
+          </li>
+          <li style="padding:6px 0;">
+            <span style="color:var(--accent);font-weight:700;margin-right:8px;">4</span>火锅（清汤锅，多涮蔬菜瘦肉，避免丸子）
+          </li>
+        </ol>
+        <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);margin:14px 0 10px;">点餐原则</div>
+        <ul style="list-style:none;font-size:0.82rem;color:var(--text-secondary);">
+          <li style="padding:3px 0;">· 先点蔬菜，再点蛋白质，最后控制主食</li>
+          <li style="padding:3px 0;">· 要求"少油少盐"</li>
+          <li style="padding:3px 0;">· 酱料分开盛放</li>
+          <li style="padding:3px 0;">· 避免含糖饮料，选择白开水、茶、黑咖啡</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="reference-section">
+      <div class="reference-section-title">预期效果</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+        <ul style="list-style:none;font-size:0.82rem;color:var(--text-secondary);">
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--accent);font-weight:600;">第 1-2 周</span><br>
+            体重下降 2-4 斤，主要是水分和肠道内容物
+          </li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--accent);font-weight:600;">第 3-4 周</span><br>
+            体重下降 4-8 斤，开始进入脂肪消耗期
+          </li>
+          <li style="padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--accent);font-weight:600;">第 2-3 个月</span><br>
+            每月减重 8-12 斤，建立稳定的饮食习惯
+          </li>
+          <li style="padding:8px 0;">
+            <span style="color:var(--orange);font-weight:600;">长期</span><br>
+            建议减重速度每周 1-2 斤，避免皮肤松弛
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="reference-section">
+      <div class="reference-section-title">关键里程碑</div>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;">
+        <ul style="list-style:none;font-size:0.85rem;" id="milestoneList">
+          <!-- 由 JS 渲染 -->
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast 提示 -->
+  <div class="toast" id="toast"></div>
+
+  <!-- 底部导航 -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="home" aria-label="首页">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">首页</span>
+    </button>
+    <button class="nav-item" data-page="diet" aria-label="饮食">
+      <span class="nav-icon">🍽</span>
+      <span class="nav-label">饮食</span>
+    </button>
+    <button class="nav-item" data-page="workout" aria-label="运动">
+      <span class="nav-icon">💪</span>
+      <span class="nav-label">运动</span>
+    </button>
+    <button class="nav-item" data-page="reference" aria-label="参考">
+      <span class="nav-icon">📖</span>
+      <span class="nav-label">参考</span>
+    </button>
+  </nav>
+
+  <!-- 注册 Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('SW 注册成功', reg.scope))
+          .catch(err => console.log('SW 注册失败', err));
+      });
+    }
+  </script>
+  <script src="./data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

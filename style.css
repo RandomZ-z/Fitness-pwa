@@ -1,0 +1,1613 @@
+/**
+ * 减脂日记 PWA - 全局样式
+ * 设计风格：深色主题 + emerald green 主色调
+ */
+
+/* ===== CSS 变量 ===== */
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --bg-card-hover: #263348;
+  --bg-input: #0f172a;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #10b981;
+  --accent-light: #34d399;
+  --accent-dark: #059669;
+  --accent-glow: rgba(16, 185, 129, 0.15);
+  --orange: #f59e0b;
+  --blue: #3b82f6;
+  --red: #ef4444;
+  --purple: #8b5cf6;
+  --pink: #ec4899;
+  --border: #334155;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-xs: 6px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --nav-height: 64px;
+  --font-display: 'Outfit', sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== 基础重置 ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  padding-bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+/* ===== 头部 ===== */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  padding-top: max(16px, env(safe-area-inset-top, 0px));
+}
+
+.app-header h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+
+.app-header .subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ===== 页面容器 ===== */
+.page {
+  display: none;
+  padding: 16px 20px;
+  animation: fadeIn 0.35s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== 日期选择器 ===== */
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+}
+
+.date-nav .date-display {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.date-nav .day-label {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.date-nav button {
+  background: var(--accent-glow);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--accent);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.date-nav button:active {
+  transform: scale(0.92);
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ===== 统计概览卡片 ===== */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 12px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.stat-card .stat-number {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-card .stat-number.green { color: var(--accent); }
+.stat-card .stat-number.orange { color: var(--orange); }
+.stat-card .stat-number.blue { color: var(--blue); }
+
+.stat-card .stat-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== 区块标题 ===== */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title .icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.section-title .icon.diet {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--orange);
+}
+
+.section-title .icon.workout {
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--blue);
+}
+
+.section-title .icon.water {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+}
+
+/* ===== 打卡卡片 ===== */
+.checkin-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+
+.checkin-card.completed {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), var(--bg-card));
+}
+
+.checkin-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.checkin-card .card-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.checkin-card .card-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.checkin-card .card-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--bg-input);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+}
+
+.checkin-card .card-badge.done {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+/* ===== 打卡项列表 ===== */
+.checkin-list {
+  list-style: none;
+}
+
+.checkin-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+  transition: var(--transition);
+}
+
+.checkin-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* 自定义复选框 */
+.checkin-checkbox {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--border);
+  background: var(--bg-input);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  margin-top: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.checkin-checkbox:active {
+  transform: scale(0.9);
+}
+
+.checkin-checkbox.checked {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.checkin-checkbox.checked::after {
+  content: '✓';
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.checkin-item .item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.checkin-item .item-text {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+  transition: var(--transition);
+}
+
+.checkin-item .item-detail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.checkin-item.checked .item-text {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  text-decoration-color: var(--text-muted);
+}
+
+/* ===== 打卡按钮 ===== */
+.checkin-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 12px;
+  font-family: var(--font-body);
+}
+
+.checkin-btn.primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.checkin-btn.primary:active {
+  transform: scale(0.98);
+  background: var(--accent-dark);
+}
+
+.checkin-btn.secondary {
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.checkin-btn.secondary:active {
+  background: var(--bg-card-hover);
+}
+
+/* ===== 饮食页面 - 食谱卡片 ===== */
+.meal-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.meal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.meal-card .meal-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.meal-card .meal-header:active {
+  background: var(--bg-card-hover);
+}
+
+.meal-card .meal-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.meal-card .meal-calories {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.meal-card .meal-arrow {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  transition: transform var(--transition);
+}
+
+.meal-card.expanded .meal-arrow {
+  transform: rotate(180deg);
+}
+
+.meal-card .meal-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.meal-card.expanded .meal-body {
+  max-height: 500px;
+}
+
+.meal-card .meal-items {
+  padding: 0 16px 14px;
+}
+
+.meal-card .meal-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.meal-card .meal-item::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+/* ===== 运动页面 - 计划卡片 ===== */
+.week-selector {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 20px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.week-selector::-webkit-scrollbar {
+  display: none;
+}
+
+.week-tab {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  font-family: var(--font-body);
+}
+
+.week-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.workout-day-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: var(--transition);
+}
+
+.workout-day-card .day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.workout-day-card .day-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.workout-day-card .day-duration {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.phase-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.phase-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--bg-input);
+  border-radius: var(--radius-xs);
+}
+
+.phase-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.phase-dot.warmup { background: var(--orange); }
+.phase-dot.main { background: var(--accent); }
+.phase-dot.stretch { background: var(--blue); }
+
+.phase-content {
+  flex: 1;
+}
+
+.phase-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.phase-desc {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.phase-time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ===== 动作库页面 ===== */
+.exercise-category {
+  margin-bottom: 20px;
+}
+
+.exercise-category-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exercise-category-title .cat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+
+.exercise-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  transition: var(--transition);
+}
+
+.exercise-item .exercise-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.exercise-item .exercise-steps {
+  list-style: none;
+  margin-bottom: 8px;
+}
+
+.exercise-item .exercise-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 3px 0;
+  line-height: 1.4;
+}
+
+.exercise-item .exercise-steps li::before {
+  content: attr(data-step);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 14px;
+  margin-top: 2px;
+}
+
+.exercise-item .exercise-note {
+  font-size: 0.78rem;
+  color: var(--orange);
+  background: rgba(245, 158, 11, 0.08);
+  padding: 8px 12px;
+  border-radius: var(--radius-xs);
+  border-left: 3px solid var(--orange);
+  line-height: 1.4;
+}
+
+/* ===== 饮食原则/参考页面 ===== */
+.principle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.principle-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.principle-item .p-icon {
+  font-size: 1.5rem;
+  margin-bottom: 6px;
+}
+
+.principle-item .p-text {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.food-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.food-table .food-row {
+  border-bottom: 1px solid var(--border);
+}
+
+.food-table .food-category {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 10px 0 4px;
+}
+
+.food-table .food-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0 10px;
+}
+
+.food-table .food-tag {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+.food-table .food-tag.avoid {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: var(--red);
+}
+
+.water-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.water-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  transition: var(--transition);
+}
+
+.water-item .water-time {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  min-width: 60px;
+}
+
+.water-item .water-amount {
+  font-size: 0.85rem;
+  color: var(--blue);
+  font-weight: 600;
+}
+
+.water-item .water-note {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-align: right;
+  max-width: 120px;
+}
+
+.water-item .water-checkbox {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--border);
+  background: var(--bg-input);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.water-item .water-checkbox:active {
+  transform: scale(0.9);
+}
+
+.water-item .water-checkbox.checked {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.water-item .water-checkbox.checked::after {
+  content: '✓';
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.water-item.done {
+  opacity: 0.5;
+}
+
+/* ===== 提示气泡 ===== */
+.tips-section {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-top: 12px;
+}
+
+.tips-section .tips-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tips-section .tips-list {
+  list-style: none;
+}
+
+.tips-section .tips-list li {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 2px 0;
+  padding-left: 12px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.tips-section .tips-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--blue);
+}
+
+/* ===== 底部导航栏 ===== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  height: var(--nav-height);
+  padding-bottom: var(--safe-bottom);
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  transition: var(--transition);
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+}
+
+.nav-item:active {
+  transform: scale(0.92);
+}
+
+.nav-item .nav-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+  transition: var(--transition);
+  color: var(--text-muted);
+}
+
+.nav-item .nav-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.nav-item.active .nav-icon {
+  color: var(--accent);
+}
+
+.nav-item.active .nav-label {
+  color: var(--accent);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 32px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--accent);
+}
+
+/* ===== 进度条 ===== */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-input);
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-bar .progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== 空状态 ===== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.empty-state .empty-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* ===== 子导航标签 ===== */
+.sub-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.sub-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.sub-tab {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-body);
+}
+
+.sub-tab.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ===== 运动打卡确认 ===== */
+.workout-checkin-card .checkin-list .checkin-item .item-text {
+  line-height: 1.5;
+}
+
+/* ===== 页面间距 ===== */
+.mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-24 { margin-bottom: 24px; }
+
+/* ===== 拉伸表格样式 ===== */
+.stretch-table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.stretch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+}
+
+.stretch-row:last-child {
+  border-bottom: none;
+}
+
+.stretch-name {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.stretch-target {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.stretch-duration {
+  font-size: 0.78rem;
+  color: var(--blue);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* ===== Toast 提示 ===== */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  color: var(--text-primary);
+  padding: 16px 28px;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ===== 滚动条 ===== */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* ===== 响应式 ===== */
+@media (min-width: 480px) {
+  body {
+    max-width: 430px;
+    margin: 0 auto;
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+  }
+  
+  .bottom-nav {
+    max-width: 430px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .toast {
+    max-width: 300px;
+  }
+}
+
+/* ===== 加载动画 ===== */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ===== 完成动画 ===== */
+@keyframes checkBounce {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.bounce-in {
+  animation: checkBounce 0.3s ease;
+}
+
+/* ===== 计划子页面 (reference) ===== */
+.reference-section {
+  margin-bottom: 24px;
+}
+
+.reference-section-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cook-method-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.cook-method {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+}
+
+.cook-method .rank {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--accent);
+  min-width: 24px;
+}
+
+.cook-method .method-name {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.cook-method .method-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ===== 导航栏展开的二级页面 ===== */
+.sub-page,
+.diet-sub-page,
+.workout-sub-page,
+.lib-sub-page {
+  display: none;
+  padding: 16px 0;
+  animation: fadeIn 0.35s ease;
+}
+
+.sub-page.active,
+.diet-sub-page.active,
+.workout-sub-page.active,
+.lib-sub-page.active {
+  display: block;
+}
+
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 16px;
+  padding: 4px 0;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+}
+
+.back-btn:active {
+  opacity: 0.6;
+}
+
+/* ===== 当天无计划提示 ===== */
+.rest-day-banner {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.rest-day-banner .rest-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+}
+
+.rest-day-banner .rest-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.rest-day-banner .rest-text {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ===== 饮食打卡 - 每餐打卡 ===== */
+.meal-checkin-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+  cursor: pointer;
+}
+
+.meal-checkin-item:last-child {
+  border-bottom: none;
+}
+
+.meal-checkin-item .meal-type-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.meal-type-icon.breakfast { background: rgba(245, 158, 11, 0.15); }
+.meal-type-icon.lunch { background: rgba(16, 185, 129, 0.15); }
+.meal-type-icon.snack { background: rgba(139, 92, 246, 0.15); }
+.meal-type-icon.dinner { background: rgba(59, 130, 246, 0.15); }
+
+.meal-checkin-item .meal-info {
+  flex: 1;
+}
+
+.meal-checkin-item .meal-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.meal-checkin-item .meal-cal {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ===== 选择器样式 ===== */
+.custom-select {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: var(--font-body);
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.custom-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* ===== 日历记录模块 ===== */
+.calendar-widget {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+/* 日历头部（折叠态） */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.calendar-header:active {
+  background: var(--bg-card-hover);
+}
+
+.calendar-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.calendar-header-left .cal-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(16, 185, 129, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.calendar-header-left .cal-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.calendar-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calendar-header-right .cal-streak {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.calendar-header-right .cal-expand-arrow {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  transition: transform var(--transition);
+}
+
+.calendar-widget.expanded .cal-expand-arrow {
+  transform: rotate(180deg);
+}
+
+/* 日历折叠态 - 当前周预览 */
+.calendar-preview {
+  display: flex;
+  padding: 0 16px 16px;
+  gap: 0;
+}
+
+.calendar-preview .preview-day {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.calendar-preview .preview-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.calendar-preview .preview-date {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.calendar-preview .preview-date.other-month {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.calendar-preview .preview-date.today {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* 日历展开态 - 完整月历 */
+.calendar-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s ease;
+}
+
+.calendar-widget.expanded .calendar-body {
+  max-height: 600px;
+}
+
+.calendar-month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 20px 14px;
+}
+
+.calendar-month-nav .month-display {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.calendar-month-nav button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.calendar-month-nav button:active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  transform: scale(0.92);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 0 16px 16px;
+  gap: 4px 0;
+}
+
+.calendar-grid .grid-weekday {
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 4px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.calendar-grid .grid-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  cursor: default;
+}
+
+.calendar-grid .grid-day-cell {
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: var(--transition);
+  position: relative;
+}
+
+.calendar-grid .grid-day-cell.other-month {
+  color: var(--text-muted);
+  opacity: 0.3;
+}
+
+.calendar-grid .grid-day-cell.today {
+  color: var(--bg-primary);
+  font-weight: 700;
+}
+
+.calendar-grid .grid-day-cell.today::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  border: 2px solid var(--text-primary);
+  opacity: 0.5;
+}
+
+/* 打卡程度色块（类 GitHub 贡献图） */
+.calendar-grid .grid-day-cell.level-0 {
+  background: transparent;
+}
+
+.calendar-grid .grid-day-cell.level-1 {
+  background: rgba(16, 185, 129, 0.2);
+}
+
+.calendar-grid .grid-day-cell.level-2 {
+  background: rgba(16, 185, 129, 0.4);
+}
+
+.calendar-grid .grid-day-cell.level-3 {
+  background: rgba(16, 185, 129, 0.65);
+  color: #fff;
+}
+
+.calendar-grid .grid-day-cell.future {
+  color: var(--text-muted);
+  opacity: 0.4;
+}
+
+/* 日历图例 */
+.calendar-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 10px 16px 16px;
+  border-top: 1px solid var(--border);
+  margin: 0 16px;
+}
+
+.calendar-legend .legend-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.calendar-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.calendar-legend .legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.calendar-legend .legend-dot.l0 { background: var(--bg-input); }
+.calendar-legend .legend-dot.l1 { background: rgba(16, 185, 129, 0.2); }
+.calendar-legend .legend-dot.l2 { background: rgba(16, 185, 129, 0.4); }
+.calendar-legend .legend-dot.l3 { background: rgba(16, 185, 129, 0.65); }
+
+/* 日历统计行 */
+.calendar-stats-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+  margin: 0 16px 16px;
+}
+
+.calendar-stats-row .cal-stat {
+  text-align: center;
+}
+
+.calendar-stats-row .cal-stat-num {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.calendar-stats-row .cal-stat-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+@media (min-width: 480px) {
+  .calendar-widget {
+    max-width: 100%;
+  }
+}

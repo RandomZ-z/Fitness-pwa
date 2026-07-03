@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # 构建阶段：上传项目文件为 Pages artifact
+  # 构建阶段：把静态文件整理到 _site 目录并上传为 Pages artifact
   deploy:
     environment:
       name: github-pages
@@ -30,10 +30,18 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # 把纯静态文件复制到 _site 目录，避免把 .github/ 等非网站文件一起上传
+      - name: Build static site
+        run: |
+          mkdir -p _site/icons
+          cp index.html app.js data.js style.css sw.js manifest.json .nojekyll _site/
+          cp -r icons/* _site/icons/
+          ls -la _site
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: './_site'
 
       - name: Deploy to GitHub Pages
         id: deployment
